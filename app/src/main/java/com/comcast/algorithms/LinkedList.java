@@ -144,6 +144,13 @@ public class LinkedList {
 
         return prev;
     }
+    public static void print(Node head) {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.val + ", ");
+            current = current.next;
+        }
+    }
 
     public static Node reverseWithRecursive(Node head) {
         if (head == null || head.getNext() == null)
@@ -399,6 +406,48 @@ public class LinkedList {
         return head;
     }
 
+    public static Node reversePartially2(Node head, int m, int n) {
+        if (head == null) {
+            return head;
+        }
+
+        int i = 0;
+        Node prev = null;
+        Node current = head;
+        while (i < m && current != null) {
+            prev = current;
+            current = current.next;
+            i++;
+        }
+
+        if (current == null) {
+            return head;
+        }
+
+        // prev is the node before nodes need to be reversed
+        // current is the first node to be reversed
+
+        Node beforeReversed = prev;
+        Node firstNode = current;
+
+        // reverse
+        while (i <= n && current != null) {
+            Node next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+            i++;
+        }
+
+        // prev is the first node after reverse
+        // current the node after reversed nodes
+
+        beforeReversed.next = prev;
+        firstNode.next = current;
+
+        return head;
+    }
+
     /*
     Partition List
     Given a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
@@ -484,5 +533,161 @@ public class LinkedList {
             slow.next = slow.next.next;
 
         return head;
+    }
+
+    public static Node reverseInGroup(Node head, int k) {
+        if (head == null) {
+            return head;
+        }
+
+        int i = 0;
+        Node prev = null;
+        Node current = head;
+
+        // reverse a group
+        while (i < 3 && current != null) {
+            Node next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+            i++;
+        }
+
+        // prev is the first node in reversed group
+        // head is the last node in reversed group
+        // current is the first node not reversed
+
+        Node nextGroupHead = reverseKGroup(current, k);
+
+        head.next = nextGroupHead;
+
+        // return the head of current group after reversed
+        return prev;
+    }
+
+    /*LinkedList :
+    Input : A>B>C>D>E
+    Output: A>E>B>D>C
+    */
+    public static Node reorde(Node head) {
+        if (head == null) {
+            return head;
+        }
+
+        // find length
+        int len = 0;
+        Node current = head;
+        while (current != null) {
+            current = current.next;
+            len++;
+        }
+
+        // start node
+        Node start = head;
+
+        for (int i=0; i<len; i+=2) {
+
+            // find last and the one before last
+            Node prevPrev = null;
+            Node prev = null;
+            current = head;
+            while (current != null) {
+                prevPrev = prev;
+                prev = current;
+                current = current.next;
+            }
+
+            Node beforeLast = prevPrev;
+            Node last = prev;
+
+            beforeLast.next = null;
+            last.next = start.next;
+            start.next = last;
+
+            // move to new start
+            start = start.next;
+            start = start.next;
+        }
+
+        return head;
+    }
+
+    public static Node sumStartWithLeastSignificant(Node n1, Node n2) {
+        Node head = null;
+        Node current = head;
+
+        int carry = 0;
+        while (n1 != null || n2 != null) {
+            int v1 = 0;
+            int v2 = 0;
+            if (n1 != null) {
+                v1 = n1.val;
+            }
+            if (n2 != null) {
+                v2 = n2.val;
+            }
+
+            int v = v1+v2 + carry;
+            if (v >= 10) {
+                v = v - 10;
+                carry = 1;
+            } else {
+                carry = 0;
+            }
+
+            Node r = new Node(v);
+
+            if (head == null) {
+                head = r;
+                current = head;
+            } else {
+                current.next = r;
+                current = r;
+            }
+
+            if (n1 != null) {
+                n1 = n1.next;
+            }
+            if (n2 != null) {
+                n2 = n2.next;
+            }
+        }
+
+        if (carry != 0) {
+            current.next = new Node(carry);
+        }
+
+        return head;
+    }
+
+    public static Node sumStartWithMostSignificant(Node n1, Node n2) {
+        n1 = reverse(n1);
+        n2 = reverse(n2);
+        return reverse(sumStartWithLeastSignificant(n1, n2));
+    }
+
+    public static void main(String[] args) {
+        LinkedList ll = new LinkedList();
+        ll.add(1);
+        ll.add(2);
+        ll.add(3);
+        ll.add(4);
+        ll.add(5);
+        ll.add(6);
+        ll.add(7);
+        ll.add(8);
+
+        LinkedList ll1 = new LinkedList();
+        ll1.add(5);
+        ll1.add(6);
+        ll1.add(3);
+        LinkedList ll2 = new LinkedList();
+        ll2.add(8);
+        ll2.add(4);
+        ll2.add(2);
+
+        Node rll = LinkedList.sumStartWithMostSignificant(ll1.head, ll2.head);
+        LinkedList.print(rll);
+
     }
 }
