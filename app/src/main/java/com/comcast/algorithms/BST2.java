@@ -384,6 +384,71 @@ public class BST2 {
     //     helperAllps(s, ps, i, j-1);
     // }
 
+    public static TreeNode convertToCircularDoublyLinkedList(TreeNode root) {
+        TreeNode[] prev = new TreeNode[1];
+        prev[0] = null;
+        TreeNode[] head = new TreeNode[1];
+        head[0] = null;
+
+        convertToCircularDoublyLinkedList(root, prev, head);
+        return head[0];
+    }
+    // inorder traverse
+    private static void convertToCircularDoublyLinkedList(TreeNode root, TreeNode[] prev, TreeNode[] head) {
+        if (root == null) {
+            return;
+        }
+
+        // left
+        convertToCircularDoublyLinkedList(root.left, prev, head);
+
+        // root
+        root.left = prev[0];
+        if (prev[0] != null) {
+            prev[0].right = root;
+        } else {
+            head[0] = root; // no prev, it's head
+        }
+
+        // save right
+        TreeNode right = root.right;
+
+        // circular head and root node
+        head[0].left = root;
+        root.right = head[0];
+
+        // right
+        prev[0] = root; // root is prev for right branch
+        convertToCircularDoublyLinkedList(right, prev, head);
+    }
+
+    public static TreeNode findKthBigestNode(TreeNode root, int k) {
+        int[] count = new int[1];
+        count[0] = 0;
+        TreeNode[] target = new TreeNode[1];
+        target[0] = null;
+        findKthBigestNode(root, k, count, target);
+        return target[0];
+    }
+    public static void findKthBigestNode(TreeNode root, int k, int[] count, TreeNode[] target) {
+        if (root == null) {
+            return;
+        }
+
+        // right
+        findKthBigestNode(root.right, k, count, target);
+
+        // root
+        count[0]++;
+        if (count[0] == k) {
+            target[0] =  root;
+            return;
+        }
+
+        // left
+        findKthBigestNode(root.left, k, count, target);
+    }
+
     public static void main (String[] args) {
         int[] a = {1,9,5,7,21,15,17,13};
 
@@ -391,6 +456,9 @@ public class BST2 {
         for (int i : a) {
             root = insert(root, new TreeNode(i));
         }
+
+        TreeNode third = findKthBigestNode(root, 3);
+        TreeNode cddll = convertToCircularDoublyLinkedList(root);
 
 // 		printInOrder(root);
 

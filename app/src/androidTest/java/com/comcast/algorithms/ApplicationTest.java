@@ -744,7 +744,7 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         Printer printer = new Printer();
         int max = 10;
         OddThread oddThread = new OddThread(printer, max);
-        EvenThread evenThread = new EvenThread((printer, max));
+        EvenThread evenThread = new EvenThread(printer, max);
         oddThread.start();
         evenThread.start();
     }
