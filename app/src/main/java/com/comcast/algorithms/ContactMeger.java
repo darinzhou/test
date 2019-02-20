@@ -35,31 +35,38 @@ public class ContactMeger {
             contactToEmailsMap.put(c.id, emailSet);
         }
 
-        HashSet<String> visitedEmails = new HashSet<>();
+        HashSet<String> visited = new HashSet<>();
         List<HashSet<String>> duplicates = new ArrayList<>();
 
         for (String email : emailToContactsMap.keySet()) {
-            if (visitedEmails.contains(email)) {
-                continue;
+            if (!visited.contains(email)) {
+                createDuplicate(email, emailToContactsMap, contactToEmailsMap, visited, duplicates);
             }
-
-            HashSet<String> relatedContacts = emailToContactsMap.get(email);
-            HashSet<String> duplicate = new HashSet<>(relatedContacts);
-
-            for (String c : relatedContacts) {
-                HashSet<String> includeEmails = contactToEmailsMap.get(c);
-                for (String e : includeEmails) {
-                    if (! visitedEmails.contains(e)) {
-                        duplicate.addAll(emailToContactsMap.get(e));
-                    }
-                }
-            }
-
-            visitedEmails.add(email);
-            duplicates.add(duplicate);
         }
 
         return duplicates;
+    }
+
+    private static void createDuplicate(String email,
+                            HashMap<String, HashSet<String>> emailToContactsMap,
+                            HashMap<String, HashSet<String>> contactToEmailsMap,
+                            HashSet<String> visited,
+                            List<HashSet<String>> duplicates) {
+        visited.add(email);
+
+        HashSet<String> relatedContacts = emailToContactsMap.get(email);
+        HashSet<String> duplicate = new HashSet<>(relatedContacts);
+
+        for (String c : relatedContacts) {
+            HashSet<String> includeEmails = contactToEmailsMap.get(c);
+            for (String e : includeEmails) {
+                if (! visited.contains(e)) {
+                    duplicate.addAll(emailToContactsMap.get(e));
+                }
+            }
+        }
+
+        duplicates.add(duplicate);
     }
 
     public static void main(String[] args) {
