@@ -163,7 +163,64 @@ public class Solution5 {
 
     static Data2 data = new Data2();
 
+    /*
+    Given a non-empty string s, you may delete at most k characters. Judge whether you can make it a palindrome.
+     */
+    public static boolean makePalindromeByDeleting(String s, int k) {
+        if (s == null || s.isEmpty()) {
+            return true;
+        }
+
+        int i = 0;
+        int j  =s.length()-1;
+        int[] deleted = new int[1];
+        deleted[0] = 0;
+        return makePalindromeByDeleting(s, k, i, j, deleted);
+    }
+
+    // time complexity: O(n)
+    private static boolean makePalindromeByDeleting(String s, int k, int left, int right, int[] deleted) {
+
+        if (left >= right) {
+            return deleted[0] <= k;
+        }
+
+        if (deleted[0] > k) {
+            return false;
+        }
+
+        if (s.charAt(left) == s.charAt(right)) {
+            return makePalindromeByDeleting(s, k, left + 1, right - 1, deleted);
+        }
+
+        // need to delete
+        int count = deleted[0] + 1;
+
+        // delete left
+        deleted[0] = count;
+        if (makePalindromeByDeleting(s, k, left + 1, right, deleted)) {
+            return true;
+        }
+        // delete right
+        deleted[0] = count;
+        if (makePalindromeByDeleting(s, k, left, right - 1, deleted)) {
+            return true;
+        }
+        // delete both
+        deleted[0] = count+1;
+        if (makePalindromeByDeleting(s, k, left + 1, right - 1, deleted)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static void main(String[] args) {
+
+        String s = "1111111111111f11111111111";
+
+        boolean bb = makePalindromeByDeleting(s, 1);
+
         Thread t1 = new Thread(new Runnable() {
             public void run() {
                 for (int i = 0; i < 100; ++i) {
