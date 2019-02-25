@@ -1,10 +1,16 @@
 package com.comcast.algorithms;
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 
 public class ShorestPath {
@@ -30,58 +36,96 @@ public class ShorestPath {
         public boolean isPathPoint(int[][] grid) {
             return grid[x][y] == 1;
         }
+
+        @Override
+        public int hashCode() {
+            return x*1000+y;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+
+            Point point = (Point)o;
+
+            if (point == null) {
+                return false;
+            }
+
+            return x == point.x && y == point.y;
+        }
     }
 
-    public static int bfs(int[][] grid, Point start, Point end) {
+    public static List<Point> bfs(int[][] grid, Point start, Point end) {
+        List<Point> path = new ArrayList<>();
         if (grid == null) {
-            return -1;
+            return path;
         }
         int m = grid.length;
         int n = grid[0].length;
         if (m == 0 || n == 0 || !start.isValid(m, n) || !end.isValid(m, n)) {
-            return -1;
+            return path;
         }
 
         boolean[][] vistied = new boolean[m][n];
+        HashMap<Point, Point> prev = new HashMap<>();
         Queue<Point> queue = new LinkedList<Point>();
 
-        start.dist = 0;
-        vistied[start.x][start.y] = true;
-        queue.add(start);
+        Point current = start;
+        current.dist = 0;
+        vistied[current.x][current.y] = true;
+        queue.add(current);
+        prev.put(current, null);
 
         while (!queue.isEmpty()) {
-            Point current = queue.remove();
+            current = queue.remove();
 
             if (current.x == end.x && current.y == end.y) {
-                return current.dist;
+                break;
             }
 
             Point next = new Point(current.x - 1, current.y, current.dist + 1);
             if (next.isValid(m, n) && !vistied[next.x][next.y] && next.isPathPoint(grid)) {
                 vistied[next.x][next.y] = true;
                 queue.add(next);
+                prev.put(next, current);
             }
 
             next = new Point(current.x + 1, current.y, current.dist + 1);
             if (next.isValid(m, n) && !vistied[next.x][next.y] && next.isPathPoint(grid)) {
                 vistied[next.x][next.y] = true;
                 queue.add(next);
+                prev.put(next, current);
             }
 
             next = new Point(current.x, current.y - 1, current.dist + 1);
             if (next.isValid(m, n) && !vistied[next.x][next.y] && next.isPathPoint(grid)) {
                 vistied[next.x][next.y] = true;
                 queue.add(next);
+                prev.put(next, current);
             }
 
             next = new Point(current.x, current.y + 1, current.dist + 1);
             if (next.isValid(m, n) && !vistied[next.x][next.y] && next.isPathPoint(grid)) {
                 vistied[next.x][next.y] = true;
                 queue.add(next);
+                prev.put(next, current);
             }
         }
 
-        return -1;
+        if (current.x != end.x || current.y != end.y) {
+            return path;
+        }
+
+        // build path
+        while (current != null) {
+            path.add(current);
+            current = prev.get(current);
+        }
+        Collections.reverse(path);
+        return path;
     }
 
     public static int dfs(int[][] grid, Point start, Point end) {
@@ -144,6 +188,72 @@ public class ShorestPath {
         return -1;
     }
 
+    public static List<Point> dfs2(int[][] grid, Point start, Point end) {
+        List<Point> path = new ArrayList<>();
+        if (grid == null) {
+            return path;
+        }
+        int m = grid.length;
+        int n = grid[0].length;
+        if (m == 0 || n == 0 || !start.isValid(m, n) || !end.isValid(m, n)) {
+            return path;
+        }
+
+        boolean[][] vistied = new boolean[m][n];
+        HashMap<Point, Point> prev = new HashMap<>();
+        Stack<Point> stack = new Stack<>();
+
+        Point current = start;
+        current.dist = 0;
+        vistied[current.x][current.y] = true;
+        stack.push(current);
+        prev.put(current, null);
+
+        while (!stack.isEmpty()) {
+            current = stack.pop();
+            if (current.x == end.x && current.y == end.y) {
+                break;
+            }
+
+            Point next = new Point(current.x - 1, current.y, current.dist + 1);
+            if (next.isValid(m, n) && !vistied[next.x][next.y] && next.isPathPoint(grid)) {
+                vistied[next.x][next.y] = true;
+                stack.push(next);
+                prev.put(next, current);
+            }
+            next = new Point(current.x + 1, current.y, current.dist + 1);
+            if (next.isValid(m, n) && !vistied[next.x][next.y] && next.isPathPoint(grid)) {
+                vistied[next.x][next.y] = true;
+                stack.push(next);
+                prev.put(next, current);
+            }
+            next = new Point(current.x, current.y - 1, current.dist + 1);
+            if (next.isValid(m, n) && !vistied[next.x][next.y] && next.isPathPoint(grid)) {
+                vistied[next.x][next.y] = true;
+                stack.push(next);
+                prev.put(next, current);
+            }
+            next = new Point(current.x, current.y + 1, current.dist + 1);
+            if (next.isValid(m, n) && !vistied[next.x][next.y] && next.isPathPoint(grid)) {
+                vistied[next.x][next.y] = true;
+                stack.push(next);
+                prev.put(next, current);
+            }
+        }
+
+        if (current.x != end.x || current.y != end.y) {
+            return path;
+        }
+
+        // build path
+        while (current != null) {
+            path.add(current);
+            current = prev.get(current);
+        }
+        Collections.reverse(path);
+        return path;
+    }
+
     public static void main(String[] args) {
         int[][] mat = new int[][]{
                 {1, 0, 1, 1, 1, 1, 0, 1, 1, 1},
@@ -160,7 +270,15 @@ public class ShorestPath {
         Point source = new Point(0, 0, 0);
         Point dest = new Point(3, 4, 0);
 
-        int p = dfs(mat, source, dest);
+        List<Point> ps = bfs(mat, source, dest);
+
+        Point source1 = new Point(0, 0, 0);
+        Point dest1 = new Point(3, 4, 0);
+        int pi = dfs(mat, source1, dest1);
+
+        Point source2 = new Point(0, 0, 0);
+        Point dest2 = new Point(3, 4, 0);
+        List<Point> p = dfs2(mat, source2, dest2);
 
         int a = 0;
 

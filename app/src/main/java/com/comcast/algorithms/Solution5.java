@@ -173,42 +173,34 @@ public class Solution5 {
 
         int i = 0;
         int j  =s.length()-1;
-        int[] deleted = new int[1];
-        deleted[0] = 0;
-        return makePalindromeByDeleting(s, k, i, j, deleted);
+        return makePalindromeByDeleting(s, k, i, j, 0);
     }
 
     // time complexity: O(n)
-    private static boolean makePalindromeByDeleting(String s, int k, int left, int right, int[] deleted) {
+    private static boolean makePalindromeByDeleting(String s, int k, int left, int right, int deleted) {
 
-        if (left >= right) {
-            return deleted[0] <= k;
+        if (deleted > k) {
+            return false;
         }
 
-        if (deleted[0] > k) {
-            return false;
+        if (left >= right) {
+            return true;
         }
 
         if (s.charAt(left) == s.charAt(right)) {
             return makePalindromeByDeleting(s, k, left + 1, right - 1, deleted);
         }
 
-        // need to delete
-        int count = deleted[0] + 1;
-
         // delete left
-        deleted[0] = count;
-        if (makePalindromeByDeleting(s, k, left + 1, right, deleted)) {
+        if (makePalindromeByDeleting(s, k, left + 1, right, deleted + 1)) {
             return true;
         }
         // delete right
-        deleted[0] = count;
-        if (makePalindromeByDeleting(s, k, left, right - 1, deleted)) {
+        if (makePalindromeByDeleting(s, k, left, right - 1, deleted + 1)) {
             return true;
         }
         // delete both
-        deleted[0] = count+1;
-        if (makePalindromeByDeleting(s, k, left + 1, right - 1, deleted)) {
+        if (makePalindromeByDeleting(s, k, left + 1, right - 1, deleted + 2)) {
             return true;
         }
 
