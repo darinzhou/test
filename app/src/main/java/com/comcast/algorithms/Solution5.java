@@ -1,14 +1,8 @@
 package com.comcast.algorithms;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.Stack;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Solution5 {
 
@@ -532,27 +526,51 @@ public class Solution5 {
         a[j] = tmp;
     }
 
+    /*
+Given a non-empty string s, you may delete at most k characters. Judge whether you can make it a palindrome.
+ */
+    public static boolean makePalindromeByDeleting(String s, int k) {
+        if (s == null || s.isEmpty()) {
+            return true;
+        }
+
+        int i = 0;
+        int j  =s.length()-1;
+        return makePalindromeByDeleting(s, k, i, j, 0);
+    }
+
+    // time complexity: O(n)
+    private static boolean makePalindromeByDeleting(String s, int k, int left, int right, int deleted) {
+
+        if (deleted > k) {
+            return false;
+        }
+
+        if (left >= right) {
+            return true;
+        }
+
+        if (s.charAt(left) == s.charAt(right)) {
+            return makePalindromeByDeleting(s, k, left + 1, right - 1, deleted);
+        }
+
+        // delete left
+        if (makePalindromeByDeleting(s, k, left + 1, right, deleted + 1)) {
+            return true;
+        }
+        // delete right
+        if (makePalindromeByDeleting(s, k, left, right - 1, deleted + 1)) {
+            return true;
+        }
+        // delete both
+        if (makePalindromeByDeleting(s, k, left + 1, right - 1, deleted + 2)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static void main(String[] args) {
-
-        String[] sa = new String[] {"a1","a2","a3","a4","a5","a6","b1","b2","b3","b4","b5","b6",
-                "c1","c2","c3","c4","c5","c6"};
-        staggerArray(sa);
-
-        int[] a = new int[]{5,7,9,-1,-1};
-        int[] b = new int[]{4,10};
-
-        merge2SortedArraysToOne(a, 3, b);
-
-        int[][] board = new int[4][4];
-        boolean succeed = nQueen(board, 4);
-
-        String[] words = new String[]{"cc", "cb", "bb", "ac"};
-        Character[] order = new Character[]{'c', 'b', 'a'};
-        Character[] order2 = new Character[]{'b', 'c', 'a'};
-
-        boolean b1 = isSorted(Arrays.asList(words), Arrays.asList(order));
-        boolean b2 = isSorted(Arrays.asList(words), Arrays.asList(order2));
-
         Thread t1 = new Thread(new Runnable() {
             public void run() {
                 for (int i = 0; i < 100; ++i) {
