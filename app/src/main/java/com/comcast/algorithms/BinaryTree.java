@@ -32,6 +32,7 @@ public class BinaryTree {
         preOrderTraversal(root, result);
         return result;
     }
+
     public static void preOrderTraversal(TreeNode root, ArrayList<TreeNode> result) {
         if (root == null)
             return;
@@ -46,6 +47,7 @@ public class BinaryTree {
         inOrderTraversal(root, result);
         return result;
     }
+
     public static void inOrderTraversal(TreeNode root, ArrayList<TreeNode> result) {
         if (root == null)
             return;
@@ -61,6 +63,7 @@ public class BinaryTree {
         postOrderTraversal(root, result);
         return result;
     }
+
     public static void postOrderTraversal(TreeNode root, ArrayList<TreeNode> result) {
         if (root == null)
             return;
@@ -73,6 +76,7 @@ public class BinaryTree {
     public ArrayList<ArrayList<TreeNode>> levelOrderTraversal() {
         return levelOrderTraversal(root);
     }
+
     // BFS
     public static ArrayList<ArrayList<TreeNode>> levelOrderTraversal(TreeNode root) {
         ArrayList<ArrayList<TreeNode>> result = new ArrayList<>();
@@ -207,9 +211,9 @@ public class BinaryTree {
         columnwiseOrderTraversal(root, 0, map);
 
         ArrayList<ArrayList<TreeNode>> result = new ArrayList<>();
-        int cStart = -1*map.keySet().size();
+        int cStart = -1 * map.keySet().size();
         int cEnd = map.keySet().size();
-        for (int i=cStart; i<=cEnd; ++i) {
+        for (int i = cStart; i <= cEnd; ++i) {
             ArrayList<TreeNode> ns = map.get(i);
             if (ns != null)
                 result.add(ns);
@@ -217,20 +221,21 @@ public class BinaryTree {
 
         return result;
     }
+
     private static void columnwiseOrderTraversal(TreeNode root, int horizontalDistanceFromRoot, HashMap<Integer, ArrayList<TreeNode>> map) {
         if (root == null)
             return;
 
         ArrayList<TreeNode> nodes = map.get(horizontalDistanceFromRoot);
         if (nodes == null) {
-            nodes  =new ArrayList<>();
+            nodes = new ArrayList<>();
             nodes.add(root);
             map.put(horizontalDistanceFromRoot, nodes);
         } else
             nodes.add(root);
 
-        columnwiseOrderTraversal(root.left, horizontalDistanceFromRoot-1, map);
-        columnwiseOrderTraversal(root.right, horizontalDistanceFromRoot+1, map);
+        columnwiseOrderTraversal(root.left, horizontalDistanceFromRoot - 1, map);
+        columnwiseOrderTraversal(root.right, horizontalDistanceFromRoot + 1, map);
     }
 
     public static void print(TreeNode root) {
@@ -655,6 +660,7 @@ public class BinaryTree {
         calcMaxPathSumLeaf2Leaf(root, maxValue);
         return maxValue[0];
     }
+
     private static int calcMaxPathSumLeaf2Leaf(TreeNode root, int[] maxValue) {
         if (root == null)
             return 0;
@@ -670,7 +676,7 @@ public class BinaryTree {
         maxValue[0] = Math.max(maxValue[0], maxLeft + rootValue + maxRight);
 
         // Return the maximum root to leaf path sum
-        return maxLeft +  maxRight + rootValue;
+        return maxLeft + maxRight + rootValue;
     }
 
     /*
@@ -689,6 +695,7 @@ public class BinaryTree {
         calcMaxPathSum(root, maxValue);
         return maxValue[0];
     }
+
     private static int calcMaxPathSum(TreeNode root, int[] maxValue) {
         if (root == null)
             return 0;
@@ -716,6 +723,7 @@ public class BinaryTree {
         int height = getHeight(root);
         return (height != -1);
     }
+
     private static int getHeight(TreeNode root) {
         if (root == null)
             return 0;
@@ -759,6 +767,7 @@ public class BinaryTree {
             return true;
         return isSymmetric(root.getLeft(), root.getRight());
     }
+
     private static boolean isSymmetric(TreeNode left, TreeNode right) {
         if (left == null && right == null)
             return true;
@@ -896,6 +905,7 @@ public class BinaryTree {
 
         return 1 + nodeNumOfCompleteBinaryTree(root.getLeft()) + nodeNumOfCompleteBinaryTree(root.getRight());
     }
+
     private static int getLeftHeight(TreeNode node) {
         if (node == null)
             return 0;
@@ -906,6 +916,7 @@ public class BinaryTree {
         }
         return height;
     }
+
     private static int getRightHeight(TreeNode node) {
         if (node == null)
             return 0;
@@ -1052,7 +1063,7 @@ public class BinaryTree {
         if (dl != -1) {
             // dl+1 is the distance of root from target
             // if root's distance from target is k, add it to result
-            if (dl+1 == k) {
+            if (dl + 1 == k) {
                 result.add(root);
                 return 0;
             }
@@ -1061,10 +1072,10 @@ public class BinaryTree {
             // Note that the right child is 2 edges away from left child
             // If a node's distance from target is k, then its distance from the root's right child is k-dl-2
             // find nodes below root's right child and distace from root's right child is k-dl-2
-            findKDistanceNodesBelowTarget(root.right, k-dl-2, result);
+            findKDistanceNodesBelowTarget(root.right, k - dl - 2, result);
 
             // return the distance of root from target
-            return 1+dl;
+            return 1 + dl;
         }
 
         // recursive call to find qualified nodes in right
@@ -1074,7 +1085,7 @@ public class BinaryTree {
         if (rl != -1) {
             // rl+1 is the distance of root from target
             // if root's distance from target is k, add it to result
-            if (rl+1 == k) {
+            if (rl + 1 == k) {
                 result.add(root);
                 return 0;
             }
@@ -1083,10 +1094,10 @@ public class BinaryTree {
             // Note that the left child is 2 edges away from right child
             // If a node's distance from target is k, then its distance from the root's left child is k-dl-2
             // find nodes below root's left child and distace from root's left child is k-dl-2
-            findKDistanceNodesBelowTarget(root.left, k-rl-2, result);
+            findKDistanceNodesBelowTarget(root.left, k - rl - 2, result);
 
             // return the distance of root from target
-            return 1+rl;
+            return 1 + rl;
         }
 
         // If target was neither present in left nor in right subtree
@@ -1105,7 +1116,7 @@ public class BinaryTree {
         }
 
         // try to find in left and right
-        findKDistanceNodesBelowTarget(root.left, k-1, result);
+        findKDistanceNodesBelowTarget(root.left, k - 1, result);
         findKDistanceNodesBelowTarget(root.right, k - 1, result);
     }
 
@@ -1126,6 +1137,7 @@ public class BinaryTree {
         toCircularDoublyLinkedList(root, prev, head);
         return head[0];
     }
+
     // recursive inorder traversal
     // Time: O(n)
     // Space: O(1) but calling stack
@@ -1142,8 +1154,8 @@ public class BinaryTree {
             prev[0].right = root;   // prev node's right points to current node
         else
             head[0] = root;         // if prev is null, then current node is head
-                                    // as prev[0] is passed in as null in the first call,
-                                    // this make sure head[0] is not null
+        // as prev[0] is passed in as null in the first call,
+        // this make sure head[0] is not null
 
         // save right
         TreeNode right = root.right;
@@ -1175,6 +1187,7 @@ public class BinaryTree {
 
         return head[0];
     }
+
     // recursive inorder traversal
     // Time: O(n)
     // Space: O(1) but calling stack
@@ -1241,6 +1254,7 @@ public class BinaryTree {
         allSumsOfRoot2LeafPaths(root, 0, result);
         return result;
     }
+
     private static void allSumsOfRoot2LeafPaths(TreeNode root, int sum, ArrayList<Integer> result) {
         if (root == null)
             return;
@@ -1353,7 +1367,7 @@ public class BinaryTree {
         int maxStackSize = 0;
         int zeroInSameLevel = 0;
 
-        for (int i=0; i<l; ++i) {
+        for (int i = 0; i < l; ++i) {
             char ch = s.charAt(i);
 
             if (ch == '(') {
@@ -1466,8 +1480,8 @@ public class BinaryTree {
 
         if (root.left != null)
             root.left.next = root.right;
-        if (root.right!=null) {
-            if (root.next!=null)
+        if (root.right != null) {
+            if (root.next != null)
                 root.right.next = root.next.left;
         }
 
@@ -1502,7 +1516,7 @@ public class BinaryTree {
 
         // find the first non null node in root.next chain
         TreeLinkNode next = root.next;
-        while (next !=null) {
+        while (next != null) {
             if (next.left != null) {
                 next = next.left;
                 break;
@@ -1516,10 +1530,10 @@ public class BinaryTree {
             next = next.next;
         }
 
-        if (root.right!=null)
+        if (root.right != null)
             root.right.next = next;
         if (root.left != null)
-            root.left.next = (root.right!=null) ? root.right : next;
+            root.left.next = (root.right != null) ? root.right : next;
 
         connectTreeLinkNode(root.right);
         connectTreeLinkNode(root.left);
@@ -1532,6 +1546,7 @@ public class BinaryTree {
         rootToLeafPath(root, path, result);
         return result;
     }
+
     public static void rootToLeafPath(TreeNode root, ArrayList<TreeNode> path, ArrayList<ArrayList<TreeNode>> result) {
         if (root == null)
             return;
@@ -1543,11 +1558,11 @@ public class BinaryTree {
 
         path.add(root.left);
         rootToLeafPath(root.left, path, result);
-        path.remove(path.size()-1);
+        path.remove(path.size() - 1);
 
         path.add(root.right);
         rootToLeafPath(root.right, path, result);
-        path.remove(path.size()-1);
+        path.remove(path.size() - 1);
     }
 
     public static List<TreeNode> findPath(TreeNode root, TreeNode node) {
@@ -1578,7 +1593,7 @@ public class BinaryTree {
             return true;
         }
 
-        path.remove(path.size()-1);
+        path.remove(path.size() - 1);
         return false;
     }
 
@@ -1599,7 +1614,7 @@ public class BinaryTree {
         HashSet<TreeNode> visited = new HashSet<>();
         int istart = Math.max(path.size() - 1, 0);
         int iend = Math.max(path.size() - 1 - x, 0);
-        for (int i=istart; i>=iend; --i) {
+        for (int i = istart; i >= iend; --i) {
             TreeNode tn = path.get(i);
             findNodesBelowNodeDistanceAtX(tn, x--, nodes, visited);
             visited.add(tn);
@@ -1619,10 +1634,43 @@ public class BinaryTree {
         }
 
         if (!visited.contains(node.left)) {
-            findNodesBelowNodeDistanceAtX(node.left, x-1, nodes, visited);
+            findNodesBelowNodeDistanceAtX(node.left, x - 1, nodes, visited);
         }
         if (!visited.contains(node.right)) {
-            findNodesBelowNodeDistanceAtX(node.right, x-1, nodes, visited);
+            findNodesBelowNodeDistanceAtX(node.right, x - 1, nodes, visited);
         }
     }
+
+    public static int maxPathSum(Solution2.TreeNode root) {
+        int[] maxSum = new int[1];
+        maxSum[0] = Integer.MIN_VALUE;
+        maxPathSum(root, maxSum);
+        return maxSum[0];
+    }
+
+    // return max sum of all paths ending at root
+    public static int maxPathSum(Solution2.TreeNode root, int[] maxSum) {
+        if (root == null) {
+            return 0;
+        }
+
+        int leftMaxSum = maxPathSum(root.left, maxSum);
+        int rightMaxSum = maxPathSum(root.right, maxSum);
+        int maxChild = Math.max(leftMaxSum, rightMaxSum);
+
+        // the max sum of all paths ending at root is the max number between:
+        // nodeVal, nodeVal+maxChild
+        int ret = Math.max(root.val, root.val + maxChild);
+
+        // the max sum of all paths passing root is the max number between:
+        // the max sum of all paths ending at root (ret), and leftMaxSum + nodeVal + rightMaxSum
+        int curMax = Math.max(ret, leftMaxSum + root.val + rightMaxSum);
+
+        // max sum up to now
+        maxSum[0] = Math.max(curMax, maxSum[0]);
+
+        // return max sum of all paths ending at root
+        return ret;
+    }
+
 }

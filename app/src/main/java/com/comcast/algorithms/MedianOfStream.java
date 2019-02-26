@@ -3,6 +3,8 @@ package com.comcast.algorithms;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.PriorityQueue;
 
 /*
@@ -11,6 +13,34 @@ Given that integers are read from a data stream. Find median of elements read so
 
 public class MedianOfStream {
 
+    //----------> stream ------->
+    // --> maxHeap(hold set of smaller data)  minHeap (hold set of larger data) -->
+
+    PriorityQueue<Integer> maxHeap = new PriorityQueue<>(Collections.reverseOrder());
+    PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+
+    public void addNumber(int i) {
+        // add to minHeap
+        minHeap.add(i);
+        // move the smallest in minHeap to maxHeap
+        maxHeap.add(minHeap.remove());
+
+        // balance: always keep minHeap's size >= maxHeap's size
+        if (minHeap.size() < maxHeap.size()) {
+            minHeap.add(maxHeap.remove());
+        }
+    }
+
+    public int getMedian() {
+        if (minHeap.size() > maxHeap.size()) {
+            return minHeap.peek();
+        }
+
+        // minHeap and maxHeap have the same size
+        return (maxHeap.peek() + minHeap.peek())/2;
+    }
+
+    /*
     private InputStream stream;
     PriorityQueue<Integer> maxHeap = new PriorityQueue<>();
     PriorityQueue<Integer> minHeap = new PriorityQueue<>();
@@ -68,5 +98,5 @@ public class MedianOfStream {
             return leftCurrent;
         return (leftCurrent+rightCurrent)/2;
     }
-
+*/
 }
