@@ -1,9 +1,14 @@
 package com.comcast.algorithms;
 
+import android.support.annotation.NonNull;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.PriorityQueue;
 import java.util.Stack;
 import java.util.HashSet;
 import java.util.HashMap;
@@ -189,17 +194,17 @@ public class Solution5 {
 
         // build ap for order
         HashMap<Character, Integer> orderMap = new HashMap<>();
-        for (int i=0; i<order.size(); ++i) {
+        for (int i = 0; i < order.size(); ++i) {
             orderMap.put(order.get(i), i);
         }
 
         // build relationship between chars in words
 //        HashMap<Character, HashSet<Character>> map = new HashMap<>();
-        for (int i=1; i<words.size(); ++i) {
-            String w1 = words.get(i-1);
+        for (int i = 1; i < words.size(); ++i) {
+            String w1 = words.get(i - 1);
             String w2 = words.get(i);
             int l = Math.min(w1.length(), w2.length());
-            for (int j=0;j<l;++j) {
+            for (int j = 0; j < l; ++j) {
                 char c1 = w1.charAt(j);
                 char c2 = w2.charAt(j);
 
@@ -264,6 +269,7 @@ public class Solution5 {
         Space right;
         Space up;
         Space down;
+
         Space(int x, int y, char type) {
             this.x = x;
             this.y = y;
@@ -279,8 +285,8 @@ public class Solution5 {
 
         // build grap
         List<Space> graph = new ArrayList<>();
-        for (int i=0; i<m; ++i) {
-            for (int j=0; j<n; ++j) {
+        for (int i = 0; i < m; ++i) {
+            for (int j = 0; j < n; ++j) {
                 if (grid[i][j] != '0') {
                     createSpace(grid, i, j, graph);
                 }
@@ -334,15 +340,15 @@ public class Solution5 {
     }
 
     public static Space createSpace(char[][] grid, int i, int j, List<Space> graph) {
-        if (i<0 || i>=grid.length || j<0 || j>=grid[0].length) {
+        if (i < 0 || i >= grid.length || j < 0 || j >= grid[0].length) {
             return null;
         }
 
         Space space = new Space(i, j, grid[i][j]);
-        space.left = createSpace(grid, i-1, j, graph);
-        space.right = createSpace(grid, i+1, j, graph);
-        space.up = createSpace(grid, i, j-1, graph);
-        space.down = createSpace(grid, i, j+1, graph);
+        space.left = createSpace(grid, i - 1, j, graph);
+        space.right = createSpace(grid, i + 1, j, graph);
+        space.up = createSpace(grid, i, j - 1, graph);
+        space.down = createSpace(grid, i, j + 1, graph);
         graph.add(space);
         grid[i][j] = 0;
 
@@ -355,8 +361,8 @@ public class Solution5 {
         }
 
         int count = 0;
-        for (int i=0; i<grid.length; ++i) {
-            for (int j=0; j<grid[0].length; ++i) {
+        for (int i = 0; i < grid.length; ++i) {
+            for (int j = 0; j < grid[0].length; ++i) {
                 if (grid[i][j] == 1) {
                     search(grid, i, j);
                     count++;
@@ -366,8 +372,9 @@ public class Solution5 {
 
         return count;
     }
+
     private static void search(int[][] grid, int i, int j) {
-        if (i<=0 || i>=grid.length || j<0 || j>=grid[0].length) {
+        if (i <= 0 || i >= grid.length || j < 0 || j >= grid[0].length) {
             return;
         }
 
@@ -375,10 +382,10 @@ public class Solution5 {
             return;
         }
 
-        search(grid, i-1, j);
-        search(grid, i+1, j);
-        search(grid, i, j-1);
-        search(grid, i, j+1);
+        search(grid, i - 1, j);
+        search(grid, i + 1, j);
+        search(grid, i, j - 1);
+        search(grid, i, j + 1);
     }
 
     // 0 - not checked, 1 - queen
@@ -395,8 +402,8 @@ public class Solution5 {
         }
 
         // check each point
-        for (int i=0; i<board.length; ++i) {
-            for (int j=0; j<board.length; ++j) {
+        for (int i = 0; i < board.length; ++i) {
+            for (int j = 0; j < board.length; ++j) {
                 // check the first empty point
                 if (board[i][j] == 0) {
                     // safe to place a queen here?
@@ -405,7 +412,7 @@ public class Solution5 {
                         board[i][j] = 1;
 
                         // recursively checking for placing more queens
-                        if (check(board, n, k+1)) {
+                        if (check(board, n, k + 1)) {
                             // succeed!
                             return true;
                         }
@@ -420,23 +427,24 @@ public class Solution5 {
         // failed!
         return false;
     }
+
     private static boolean isSafe(int[][] board, int ii, int jj) {
         int m = board.length;
 
-        for (int i=0; i<m; ++i) {
-            if (i!= ii && board[i][jj] == 1) {
+        for (int i = 0; i < m; ++i) {
+            if (i != ii && board[i][jj] == 1) {
                 return false;
             }
         }
-        for (int i=0; i<m; ++i) {
-            if (i!=jj && board[ii][i] == 1) {
+        for (int i = 0; i < m; ++i) {
+            if (i != jj && board[ii][i] == 1) {
                 return false;
             }
         }
 
         int i = ii;
         int j = jj;
-        while (i>0 && j>0) {
+        while (i > 0 && j > 0) {
             i--;
             j--;
             if (board[i][j] == 1) {
@@ -445,7 +453,7 @@ public class Solution5 {
         }
         i = ii;
         j = jj;
-        while (i<m-1 && j>0) {
+        while (i < m - 1 && j > 0) {
             i++;
             j--;
             if (board[i][j] == 1) {
@@ -454,7 +462,7 @@ public class Solution5 {
         }
         i = ii;
         j = jj;
-        while (i<m-1 && j<m-1) {
+        while (i < m - 1 && j < m - 1) {
             i++;
             j++;
             if (board[i][j] == 1) {
@@ -463,7 +471,7 @@ public class Solution5 {
         }
         i = ii;
         j = jj;
-        while (i>0 && j<m-1) {
+        while (i > 0 && j < m - 1) {
             i--;
             j++;
             if (board[i][j] == 1) {
@@ -480,8 +488,8 @@ public class Solution5 {
         }
 
         // move all a elements to end of a
-        int t = a.length-1;
-        for (int i = al-1; i >=0; --i) {
+        int t = a.length - 1;
+        for (int i = al - 1; i >= 0; --i) {
             a[t--] = a[i];
         }
 
@@ -511,21 +519,22 @@ public class Solution5 {
      */
     public static void staggerArray(String[] a) {
 
-        int n = a.length/3;
+        int n = a.length / 3;
 
-        for (int i=0; i<3*n; i+=3) {
-            int k = i/3;
-            if (k*n < 3*n) {
+        for (int i = 0; i < 3 * n; i += 3) {
+            int k = i / 3;
+            if (k * n < 3 * n) {
                 swap(a, i, k * n);
             }
-            if (n+k < 3*n) {
+            if (n + k < 3 * n) {
                 swap(a, i + 1, n + k);
             }
-            if (2*n+k < 3*n) {
+            if (2 * n + k < 3 * n) {
                 swap(a, i + 2, 2 * n + k);
             }
         }
     }
+
     private static void swap(String[] a, int i, int j) {
         String tmp = a[i];
         a[i] = a[j];
@@ -541,7 +550,7 @@ Given a non-empty string s, you may delete at most k characters. Judge whether y
         }
 
         int i = 0;
-        int j  =s.length()-1;
+        int j = s.length() - 1;
         return makePalindromeByDeleting(s, k, i, j, 0);
     }
 
@@ -576,8 +585,170 @@ Given a non-empty string s, you may delete at most k characters. Judge whether y
         return false;
     }
 
+    /*
+    Robot walked from the upper left to the lower right, can only go down and to the right,
+    the number of each grid is height,
+    If the next cell height is higher than the current, we must pay the difference cost,
+    otherwise no cost,
+    Find the minimum cost to reach the lower right corner,
+    Follow up 1, print the minimum cost path;
+     */
+    static class Cell implements Comparable<Cell> {
+        int x;
+        int y;
+        int cost;
+
+        public Cell(int x, int y) {
+            this.x = x;
+            this.y = y;
+            this.cost = 0;
+        }
+
+        public Cell(int x, int y, int cost) {
+            this.x = x;
+            this.y = y;
+            this.cost = cost;
+        }
+
+        public boolean isValid(int m, int n) {
+            return (x >= 0 && x < m && y >= 0 && y < n);
+        }
+
+        public static String getTag(int x, int y) {
+            return x + "-" + y;
+        }
+
+        @Override
+        public String toString() {
+            return getTag(x, y);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(toString());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) {
+                return true;
+            }
+
+            Cell other = (Cell) obj;
+            if (other == null) {
+                return false;
+            }
+
+            return other.x == x && other.y == y;
+        }
+
+
+        @Override
+        public int compareTo(@NonNull Cell cell) {
+            return cost - cell.cost;
+        }
+    }
+
+    public static List<Cell> minPath(int[][] grid, int x1, int y1, int x2, int y2) {
+        List<Cell> path = new ArrayList<>();
+        if (grid == null || grid.length == 0 || grid[0].length == 0) {
+            return path;
+        }
+        int m = grid.length;
+        int n = grid[0].length;
+        if (x1 < 0 || x1 >= m || y1 < 0 || y1 >= n || x2 < 0 || x2 >= m || y2 < 0 || y2 >= n) {
+            return path;
+        }
+
+        // build graph
+        HashMap<String, Cell> graph = new HashMap<>();
+        for (int i = x1; i <= x2; ++i) {
+            for (int j = y1; j <= y2; ++j) {
+                Cell cell = new Cell(i, j, Integer.MAX_VALUE);
+                graph.put(cell.toString(), cell);
+            }
+        }
+
+        // bfs
+        PriorityQueue<Cell> pq = new PriorityQueue<>();
+        HashMap<Cell, Cell> prev = new HashMap<>();
+
+        Cell current = graph.get(Cell.getTag(x1, y1));
+        current.cost = grid[x1][y1];
+        pq.add(current);
+        prev.put(current, null);
+
+        while (!pq.isEmpty()) {
+            current = pq.remove();
+            if (current.x == x2 && current.y == y2) {
+                break;
+            }
+
+            // right
+            Cell right = graph.get(Cell.getTag(current.x + 1, current.y));
+            if (right!=null && right.isValid(m, n)) {
+                int newCost = current.cost + grid[right.x][right.y];
+                if (newCost < right.cost) {
+                    // found new path with lower cost
+                    right.cost = newCost;
+                    pq.add(right);
+                    prev.put(right, current);
+                }
+            }
+
+            // down
+            Cell down = graph.get(Cell.getTag(current.x, current.y + 1));
+            if (down!=null && down.isValid(m, n)) {
+                int newCost = current.cost + grid[down.x][down.y];
+                if (newCost < down.cost) {
+                    // found new path with lower cost
+                    down.cost = newCost;
+                    pq.add(down);
+                    prev.put(down, current);
+                }
+            }
+
+            // righ-down
+            // down
+            Cell rightDown = graph.get(Cell.getTag(current.x + 1, current.y + 1));
+            if (rightDown!=null && rightDown.isValid(m, n)) {
+                int newCost = current.cost + grid[rightDown.x][rightDown.y];
+                if (newCost < rightDown.cost) {
+                    // found new path with lower cost
+                    rightDown.cost = newCost;
+                    pq.add(rightDown);
+                    prev.put(rightDown, current);
+                }
+            }
+        }
+
+        // not found
+        if (current.x != x2 || current.y != y2) {
+            return path;
+        }
+
+        // build path in reverse order
+        while (current != null) {
+            path.add(current);
+            current = prev.get(current);
+        }
+
+        // reverse list to get the path
+        Collections.reverse(path);
+
+
+        return path;
+    }
+
     public static void main(String[] args) {
 
+        int cost[][] = {
+                {1, 2, 3},
+                {4, 8, 2},
+                {1, 5, 3}
+        };
+
+        List<Cell> p = minPath(cost, 0,0, 2,2);
 
         Thread t1 = new Thread(new Runnable() {
             public void run() {
