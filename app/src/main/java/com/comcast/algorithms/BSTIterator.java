@@ -38,9 +38,10 @@ public class BSTIterator {
     public TreeNode next() {
         TreeNode node = stack.pop();
 
-        // update stack for next smallest value on top
-        pushNodeAndLeftChainInStack(node.right);
-
+        if (node.right!= null) {
+            // update stack for next smallest value on top
+            pushNodeAndLeftChainInStack(node.right);
+        }
         return node;
     }
 }
